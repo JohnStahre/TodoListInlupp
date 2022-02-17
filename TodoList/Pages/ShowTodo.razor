@@ -1,0 +1,43 @@
+﻿@page "/showTodo/{TodoId}"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Todo</PageTitle>
+
+<h1>Todo</h1>
+
+<p>This component demonstrates showing a single todo.</p>
+
+@if (todo == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+   <h4>UserId: @todo.userId</h4>
+   <h4>@todo.id</h4>
+   <h4>@todo.title</h4>
+   <h4>@todo.completed</h4>
+
+}
+
+
+@code {
+    [Parameter]
+    public string TodoId { get; set; }
+
+    private Todo todo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            todo = await Http.GetFromJsonAsync<Todo>($"https://jsonplaceholder.typicode.com/todos/{TodoId}");
+
+        } catch(Exception e)
+        {
+            var error = "error";
+        }
+
+    }
+}

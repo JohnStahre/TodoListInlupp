@@ -1,0 +1,56 @@
+﻿@page "/todos"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Todos list</PageTitle>
+
+<h1>Todos list</h1>
+
+<p>This component demonstrates fetching todos from the server.</p>
+
+@if (todos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User Id</th>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var todo in todos)
+            {
+                <tr>
+                    <td>@todo.userId</td>
+                    <td>@todo.id</td>
+                    <td><a href="/showTodo/@todo.id">@todo.title</a></td>
+                    <td>@todo.completed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Todo[]? todos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            todos = await Http.GetFromJsonAsync<Todo[]>("https://jsonplaceholder.typicode.com/todos");
+        } catch(Exception e)
+        {
+            var error = "error";
+        }
+
+    }
+
+
+}

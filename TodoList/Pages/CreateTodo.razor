@@ -1,0 +1,58 @@
+﻿<h3>CreateTodo</h3>
+@page "/createTodo"
+@inject HttpClient Http
+@using Models
+@using System.Text
+
+<PageTitle>Todo</PageTitle>
+
+<h1>Todo</h1>
+
+<p>This component demonstrates how to create and post a todo.</p>
+
+   <p>UserId:</p>
+   <input @bind="todo.userId" />
+   <br/>
+   <br/>
+     
+   <p>Id:</p>
+   <input @bind="todo.id" />
+
+    <p>Title:</p><input @bind="todo.title" />
+    <br/>
+    <br/>
+
+    <p>Completed:  <input type="checkbox" @bind="todo.completed" /></p>
+
+     <br/>
+     <br/>
+
+     <button @onclick="PostTodo">Add todo</button>
+
+       <p hidden="@HideLabel">Posten gick toppen!</p>
+     
+
+@code {
+    [Parameter]
+    public string TodoId { get; set; }
+    public bool HideLabel {get;set;} = true;
+
+    private Todo todo = new();
+
+    private async void PostTodo()
+    {
+        try
+        {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(todo);
+            HttpClient httpClient = new HttpClient();
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var result = await httpClient.PostAsync("https://jsonplaceholder.typicode.com/posts", content);
+            HideLabel = false;
+        } catch(Exception e)
+        {
+         
+        }
+
+
+    }
+}
